@@ -60,7 +60,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const paths = [];
+  const paths = ["/about"];
   return {
     paths,
     fallback: "blocking",
