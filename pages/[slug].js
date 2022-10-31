@@ -1,15 +1,13 @@
 import { client } from "../lib/apollo";
 import { gql } from "@apollo/client";
-
+import parse from "html-react-parser";
 import Head from "next/head";
 
 export default function SlugPage({ post }) {
+  const fullHead = parse(post.seo.fullHead);
   return (
     <div>
-      <Head>
-        <title>Headless WP Next Starter</title>
-        <link rel="icon" href="favicon.ico"></link>
-      </Head>
+      <Head>{fullHead}</Head>
 
       <main>
         <div className="siteHeader">
@@ -28,11 +26,16 @@ export default function SlugPage({ post }) {
 
 export async function getStaticProps({ params }) {
   const GET_POST = gql`
-    query GetPostByURI($id: ID!) {
+    query PostBySlug($id: ID!) {
       post(id: $id, idType: SLUG) {
         title
         content
         date
+        seo {
+          metaDesc
+          fullHead
+          title
+        }
         author {
           node {
             firstName
@@ -52,6 +55,7 @@ export async function getStaticProps({ params }) {
     },
   });
   const post = response?.data?.post;
+
   return {
     props: {
       post,
